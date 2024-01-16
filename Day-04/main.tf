@@ -1,10 +1,22 @@
+locals {
+
+  access_key = "AKIAWAY3OUANH6DHP57Z"
+  secret_key = "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"
+
+  common-tags = {
+    project   = "Terraform Tutorials"
+    createdBy = "Vivek Gupta"
+  }
+}
+
 resource "aws_vpc" "main" {
   cidr_block       = var.vpc_cidr
   instance_tenancy = "default"
 
-  tags = {
-    Name = var.vpc_name
-  }
+  tags = merge(local.common-tags, {
+    Name = var.vpc_name,
+
+  })
 }
 
 resource "aws_subnet" "public_subent" {
@@ -13,9 +25,9 @@ resource "aws_subnet" "public_subent" {
   cidr_block        = element(var.public_subnet, count.index)
   availability_zone = data.aws_availability_zones.available.names[count.index]
 
-  tags = {
+  tags = merge(local.common-tags, {
     Name = "${var.vpc_name}-public-subnet-${data.aws_availability_zones.available.names[count.index]}"
-  }
+  })
 }
 
 resource "aws_subnet" "private_subnet" {
@@ -63,9 +75,9 @@ resource "aws_route_table" "public_rt" {
   tags = {
     Name = "${var.vpc_name}-public-rt"
   }
-  
+
   lifecycle {
-    ignore_changes = [ route ]
+    ignore_changes = [route]
   }
 }
 
@@ -90,7 +102,7 @@ resource "aws_route_table" "private_rt" {
   }
 
   lifecycle {
-    ignore_changes = [ route ]
+    ignore_changes = [route]
   }
 }
 
