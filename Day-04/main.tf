@@ -1,8 +1,4 @@
 locals {
-
-  access_key = "AKIAWAY3OUANH6DHP57Z"
-  secret_key = "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"
-
   common-tags = {
     project   = "Terraform Tutorials"
     createdBy = "Vivek Gupta"
